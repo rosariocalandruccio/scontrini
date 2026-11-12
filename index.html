@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Scontrini</title>
+  <meta name="description" content="Nota spese da foto degli scontrini, tutto in locale sul dispositivo.">
+  <meta name="theme-color" content="#1f6f5c">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="vendor/tesseract/tesseract.min.js" defer></script>
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <header class="barra">
+    <h1>Scontrini</h1>
+    <span class="locale" title="I dati restano solo su questo dispositivo">🔒 solo locale</span>
+  </header>
+
+  <main>
+    <section class="azioni">
+      <label class="btn primario grande">
+        📷 Fotografa scontrino
+        <input id="foto-camera" type="file" accept="image/*" capture="environment" hidden>
+      </label>
+      <label class="btn">
+        🖼️ Da galleria
+        <input id="foto-galleria" type="file" accept="image/*" multiple hidden>
+      </label>
+    </section>
+
+    <section class="filtri">
+      <label>Dal <input type="date" id="f-dal"></label>
+      <label>Al <input type="date" id="f-al"></label>
+      <label>Categoria
+        <select id="f-cat"><option value="">Tutte</option></select>
+      </label>
+    </section>
+
+    <section id="riepilogo" class="riepilogo"></section>
+
+    <section class="tabella-wrap">
+      <table id="tabella">
+        <thead><tr><th></th><th>Data</th><th>Esercente</th><th>Categoria</th><th class="num">Importo</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <p id="vuoto" class="vuoto" hidden>Nessuno scontrino. Inizia fotografandone uno.</p>
+    </section>
+
+    <section class="esporta">
+      <label class="check"><input type="checkbox" id="x-img"> Includi immagini nell'XML</label>
+      <div class="riga-btn">
+        <button class="btn primario" id="x-scarica">⬇️ Esporta XML</button>
+        <button class="btn" id="x-condividi" hidden>📤 Condividi XML</button>
+      </div>
+      <p class="nota">L'export include solo le righe filtrate.</p>
+    </section>
+  </main>
+
+  <dialog id="scheda">
+    <form method="dialog" id="modulo">
+      <h2 id="scheda-titolo">Nuovo scontrino</h2>
+      <div id="stato" class="stato" hidden>
+        <div class="progresso"><div id="progresso-barra"></div></div>
+        <span id="stato-testo">Lettura in corso…</span>
+      </div>
+      <div class="anteprime">
+        <figure><img id="img-logo" alt="Logo / testata"><figcaption>Logo</figcaption></figure>
+        <figure class="foto"><img id="img-foto" alt="Scontrino"><figcaption>
+          <button type="button" class="btn piccolo" id="ruota">↻ Ruota e rileggi</button></figcaption></figure>
+      </div>
+      <label>Esercente <input id="c-esercente" autocomplete="off"></label>
+      <div class="due">
+        <label>Data <input id="c-data" type="date" required></label>
+        <label>Importo € <input id="c-importo" type="text" inputmode="decimal" required pattern="\d+([.,]\d{1,2})?"></label>
+      </div>
+      <label>Categoria <span id="c-suggerita" class="suggerita"></span>
+        <select id="c-categoria" required></select>
+      </label>
+      <div id="chip-cat" class="chip"></div>
+      <label>P. IVA <input id="c-piva" inputmode="numeric" maxlength="11"></label>
+      <label>Note <input id="c-note"></label>
+      <details><summary>Testo letto (OCR)</summary><pre id="c-testo"></pre></details>
+      <div class="riga-btn fine">
+        <button type="button" class="btn pericolo" id="elimina" hidden>Elimina</button>
+        <span class="spazio"></span>
+        <button type="button" class="btn" id="annulla">Annulla</button>
+        <button type="submit" class="btn primario" id="salva" value="salva">Salva</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" hidden></div>
+</body>
+</html>
